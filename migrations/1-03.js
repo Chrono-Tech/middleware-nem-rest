@@ -1,5 +1,7 @@
 'use strict';
 
+const config = require('../config');
+
 module.exports.id = '1.03';
 
 /**
@@ -8,7 +10,7 @@ module.exports.id = '1.03';
  */
 
 module.exports.up = function (done) {
-  let coll = this.db.collection('noderedstorages');
+  let coll = this.db.collection(`${config.nodered.functionGlobalContext.settings.mongo.collectionPrefix}noderedstorages`);
   coll.update({
     'type': 'flows',
     'path': '2c9dd332.05334c'
@@ -330,7 +332,7 @@ module.exports.up = function (done) {
 };
 
 module.exports.down = function (done) {
-  let coll = this.db.collection('noderedstorages');
+  let coll = this.db.collection(`${config.nodered.functionGlobalContext.settings.mongo.collectionPrefix}noderedstorages`);
   coll.remove({
     'type': 'flows',
     'path': '2c9dd332.05334c'
