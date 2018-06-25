@@ -188,6 +188,17 @@ describe('core/rest', function () { //todo add integration tests for query, push
  it('address/balance by rest', async () => {
     const address = accounts[0];
 
+    await accountModel.findOneAndUpdate({address: accounts[0]}, {
+      $set: {
+        "mosaics" : {
+          "nem:xem" : {
+              "confirmed" : "1000000",
+              "unconfirmed" : "200"
+          }
+        }
+      }
+    });
+
     await new Promise((res, rej) => {
       request({
         url: `http://localhost:${config.rest.port}/addr/${address}/balance`,
@@ -198,8 +209,9 @@ describe('core/rest', function () { //todo add integration tests for query, push
 
         const body = JSON.parse(resp.body);
         expect(body.balance.confirmed.value).to.be.not.undefined;
-        expect(body.mosaics).to.be.not.undefined;
-        expect(body.mosaics).an('object').to.be.not.undefined;
+        const xem = body.mosaics["nem:xem"];
+        expect(xem.name).to.eq('xem');
+        expect(xem.divisibility).to.eq(10);
         res();
       });
     });
